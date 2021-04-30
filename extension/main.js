@@ -9,4 +9,7 @@ function helloWorld() {
 	console.log(doc.text());
 }
 
-helloWorld();
+// comment this line out for testing
+// helloWorld();
+
+export const inlineRemover = (word) => word.replace(/<\/*\w+>/g, '');
