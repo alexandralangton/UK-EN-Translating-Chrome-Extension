@@ -1,4 +1,4 @@
-import { inlineAdder } from '../extension/main';
+import { inlineAdder, matchCase } from '../extension/main';
 import { test, expect } from '@jest/globals';
 
 describe('Function inlineAdder: Adding in inline HTML elements from original text to translated words', () => {
@@ -78,5 +78,55 @@ describe('Function inlineAdder: Adding in inline HTML elements from original tex
 		expect(inlineAdder('<a><i><small>ameba</a></i></small>', 'amoeba')).toBe(
 			'<a><i><small>amoeba</a></i></small>'
 		);
+	});
+});
+
+describe('Function matchCase: making the translated word the same case as the original word', () => {
+	test('it rebuilds a word in sentence case', () => {
+		expect(matchCase('Behavior', 'behaviour')).toBe('Behaviour');
+		expect(matchCase('Fiber', 'fibre')).toBe('Fibre');
+		expect(matchCase('Flashlight', 'torch')).toBe('Torch');
+		expect(matchCase('Takeout', 'takeaway')).toBe('Takeaway');
+		expect(matchCase('Honor', 'honour')).toBe('Honour');
+	});
+
+	test('it rebuilds a word in all capitals', () => {
+		expect(matchCase('BEHAVIOR', 'behaviour')).toBe('BEHAVIOUR');
+		expect(matchCase('FIBER', 'fibre')).toBe('FIBRE');
+		expect(matchCase('FLASHLIGHT', 'torch')).toBe('TORCH');
+		expect(matchCase('TAKEOUT', 'takeaway')).toBe('TAKEAWAY');
+		expect(matchCase('HONOR', 'honour')).toBe('HONOUR');
+	});
+
+	test("it doesn't change a word in all lowercase", () => {
+		expect(matchCase('behavior', 'behaviour')).toBe('behaviour');
+		expect(matchCase('fiber', 'fibre')).toBe('fibre');
+		expect(matchCase('flashlight', 'torch')).toBe('torch');
+		expect(matchCase('takeout', 'takeaway')).toBe('takeaway');
+		expect(matchCase('honor', 'honour')).toBe('honour');
+	});
+
+	test('it ignores random capitals in a word in sentence case', () => {
+		expect(matchCase('BehaVior', 'behaviour')).toBe('Behaviour');
+		expect(matchCase('FiBer', 'fibre')).toBe('Fibre');
+		expect(matchCase('FlaShlight', 'torch')).toBe('Torch');
+		expect(matchCase('TakEout', 'takeaway')).toBe('Takeaway');
+		expect(matchCase('HoNor', 'honour')).toBe('Honour');
+	});
+
+	test('it ignores random capitals in primarily lowercase words', () => {
+		expect(matchCase('behAvior', 'behaviour')).toBe('behaviour');
+		expect(matchCase('fIBer', 'fibre')).toBe('fibre');
+		expect(matchCase('flashLight', 'torch')).toBe('torch');
+		expect(matchCase('takEOut', 'takeaway')).toBe('takeaway');
+		expect(matchCase('honoR', 'honour')).toBe('honour');
+	});
+
+	test('it ignores random lowercased letters in primarily capitalized words', () => {
+		expect(matchCase('BeHAVIOR', 'behaviour')).toBe('BEHAVIOUR');
+		expect(matchCase('FIBeR', 'fibre')).toBe('FIBRE');
+		expect(matchCase('FLASHLiGHT', 'torch')).toBe('TORCH');
+		expect(matchCase('TAkEOUT', 'takeaway')).toBe('TAKEAWAY');
+		expect(matchCase('HONOr', 'honour')).toBe('HONOUR');
 	});
 });
