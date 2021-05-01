@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { dictionary } from './dictionary';
 
 function helloWorld() {
@@ -21,7 +22,7 @@ export function simplifyBefore(word, nlp) {
 	word = inlineRemover(word)
 		.toLowerCase()
 		.replace(
-			/^[%^\-\u2014\u2013*&@#%/:;.,"'?!°(){}[\]<>]+|[%^\-\u2014\u2013*&@%/#:;.,"'?!°(){}[\]<>]+$/gm,
+			/^[%^\-\u2014\u2013*&@#%/:;.,"'?!°(){}[\]<>]+|[%^\-\u2014\u2013*&@%/#:;.,"'?!°(){}[\]<>]+$/g,
 			''
 		);
 	let singNoun = nlp(word).nouns().toSingular();
@@ -52,13 +53,21 @@ export function matchCase(usWord, ukWord) {
 export function inlineAdder(word, translatedWord) {
 	let frontInline = '',
 		endInline = '';
-	if (/^<\w+>/g.test(word)) {
-		let endIdx = word.lastIndexOf('>');
-		frontInline = word.slice(0, endIdx);
+	if (/^<\/*\w+>/g.test(word)) {
+		for (let i = 0; i < word.length; i++) {
+			if (word[i] === '>' && word[i + 1] !== '<') {
+				frontInline = word.slice(0, i + 1);
+				break;
+			}
+		}
 	}
-	if (/<\/\w+>$/g.test(word)) {
-		let startIdx = word.indexOf('<');
-		endInline = word.slice(startIdx);
+	if (/<\/*\w+>$/g.test(word)) {
+		for (let j = word.length - 1; j >= 0; j--) {
+			if (word[j] === '<' && word[j - 1] !== '>') {
+				endInline = word.slice(j);
+				break;
+			}
+		}
 	}
 	return frontInline + translatedWord + endInline;
 }
