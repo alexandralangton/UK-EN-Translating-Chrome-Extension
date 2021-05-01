@@ -30,22 +30,28 @@ export function simplifyBefore(word, nlp) {
 }
 
 export function matchCase(usWord, ukWord) {
-	let result = '';
+	let lowerNum = 0,
+		upperNum = 0;
+	for (let i = 0; i < usWord.length; i++) {
+		let usCode = usWord.charCodeAt(i);
+		if (usCode >= 65 && usCode < 65 + 26) upperNum++;
+		else lowerNum++;
+	}
 
-	for (let i = 0; i < ukWord.length; i++) {
-		let usCode, ukLetter;
-		if (i === 0) {
-			ukLetter = ukWord.charAt(i);
-			usCode = usWord.charCodeAt(i);
+	let capCase;
+	if (lowerNum > upperNum) {
+		if (usWord.charCodeAt(0) >= 65 && usWord.charCodeAt(0) < 65 + 26) {
+			capCase = 'title';
 		} else {
-			ukLetter = ukWord.charAt(i);
-			usCode = usWord.charCodeAt(1);
+			capCase = 'lower';
 		}
-		if (usCode >= 65 && usCode < 65 + 26) {
-			result += ukLetter.toUpperCase();
-		} else {
-			result += ukLetter.toLowerCase();
-		}
+	} else {
+		capCase = 'upper';
+	}
+
+	let result = capCase === 'lower' ? ukWord[0] : ukWord[0].toUpperCase();
+	for (let j = 1; j < ukWord.length; j++) {
+		result += capCase === 'upper' ? ukWord[j].toUpperCase() : ukWord[j];
 	}
 	return result;
 }
