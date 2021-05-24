@@ -26,6 +26,7 @@ export function simplifyBefore(word, nlp) {
 			''
 		);
 	let singNoun = nlp(word).nouns().toSingular();
+	// also need to account for ized, lled, llment endings
 	return singNoun.list.length ? singNoun.text() : word;
 }
 

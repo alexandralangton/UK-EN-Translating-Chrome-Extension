@@ -131,7 +131,7 @@ describe('Function matchCase: making the translated word the same case as the or
 	});
 });
 
-describe('Function punctuationAdder: adding back punctuation, plurals, and correct endings', () => {
+describe('Function punctuationAdder: adding back punctuation', () => {
 	test('it adds in single punctuation at the start of a word', () => {
 		expect(punctuationAdder('"behavior', 'behaviour')).toBe('"behaviour');
 		expect(punctuationAdder('*Favorite', 'Favourite')).toBe('*Favourite');
@@ -170,5 +170,45 @@ describe('Function punctuationAdder: adding back punctuation, plurals, and corre
 		expect(punctuationAdder('\u2014<COLOR>!', 'COLOUR')).toBe(
 			'\u2014<COLOUR>!'
 		);
+	});
+});
+
+// also need to test for twoToOnePlural
+describe('Function pluralDetector: adding back plurals and correct endings', () => {
+	test('it makes a translated word plural if the original word is plural', () => {
+		expect(punctuationAdder('behaviors', 'behaviour')).toBe('behaviours');
+		expect(punctuationAdder('washrooms', 'lavatory')).toBe('lavatories');
+		expect(punctuationAdder('apartments', 'flat')).toBe('flats');
+		expect(punctuationAdder('flavors', 'flavour')).toBe('flavours');
+		expect(punctuationAdder('sabers', 'sabre')).toBe('sabres');
+	});
+
+	test('it does not make a translated word plural if the original word is not plural', () => {
+		expect(punctuationAdder('zipper', 'zip')).toBe('zip');
+		expect(punctuationAdder('clothespin', 'peg')).toBe('peg');
+		expect(punctuationAdder('mom', 'mum')).toBe('mum');
+		expect(punctuationAdder('stroller', 'pushchair')).toBe('pushchair');
+		expect(punctuationAdder('savanna', 'savannah')).toBe('savannah');
+	});
+
+	test('it identifies and matches root translations ending in "ized"', () => {
+		expect(punctuationAdder('localized', 'localise')).toBe('localised');
+		expect(punctuationAdder('apologized', 'apologise')).toBe('apologised');
+		expect(punctuationAdder('hypnotized', 'hypnotise')).toBe('hypnotised');
+		expect(punctuationAdder('realized', 'realise')).toBe('realised');
+	});
+
+	test('it identifies and matches root translations ending in "lled"', () => {
+		expect(punctuationAdder('shoveled', 'shovel')).toBe('shovelled');
+		expect(punctuationAdder('totaled', 'total')).toBe('totalled');
+		expect(punctuationAdder('rivaled', 'rival')).toBe('rivalled');
+		expect(punctuationAdder('unraveled', 'unravel')).toBe('unravelled');
+	});
+
+	test('it identifies and matches root translations ending in "llment"', () => {
+		expect(punctuationAdder('fulfillment', 'fulfil')).toBe('fulfilment');
+		expect(punctuationAdder('installment', 'install')).toBe('instalment');
+		expect(punctuationAdder('enrollment', 'enrol')).toBe('enrolment');
+		expect(punctuationAdder('entrallment', 'enthral')).toBe('enthralment');
 	});
 });
