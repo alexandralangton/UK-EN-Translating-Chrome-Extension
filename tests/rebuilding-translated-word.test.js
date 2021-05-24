@@ -167,6 +167,8 @@ describe('Function punctuationAdder: adding back punctuation, plurals, and corre
 	test('it adds in multiple punctuation at the start and end of a word', () => {
 		expect(punctuationAdder('("behavior")', 'behaviour')).toBe('("behaviour")');
 		expect(punctuationAdder("#&Favorite-'", 'Favourite')).toBe("#&Favourite-'");
-		expect(punctuationAdder('\u2014<COLOR>!', 'COLOUR')).toBe('\u2014<COLOR>!');
+		expect(punctuationAdder('\u2014<COLOR>!', 'COLOUR')).toBe(
+			'\u2014<COLOUR>!'
+		);
 	});
 });

@@ -79,13 +79,15 @@ export function inlineAdder(word, translatedWord) {
 }
 
 export function punctuationAdder(word, translatedWord) {
-	if ('-.,:;"\'?!)}]°<'.includes(word[word.length - 1])) {
-		translatedWord = translatedWord + word[word.length - 1];
-	}
-	if ('-.,"\'{[(#>'.includes(word[0])) {
-		translatedWord = word[0] + translatedWord;
-	}
-	return translatedWord;
+	const frontPunct = word.match(
+		/^[%^\-\u2014\u2013*&@#%/:;.,"'?!°(){}[\]<>]+/g
+	);
+	const endPunct = word.match(/[%^\-\u2014\u2013*&@%/#:;.,"'?!°(){}[\]<>]+$/g);
+	let punctuatedWord = '';
+	if (frontPunct) punctuatedWord += frontPunct;
+	punctuatedWord += translatedWord;
+	if (endPunct) punctuatedWord += endPunct;
+	return punctuatedWord;
 }
 
 export function pluralDetector(word, translatedWord, twoToOnePlural) {
