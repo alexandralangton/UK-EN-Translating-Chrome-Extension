@@ -78,23 +78,22 @@ export function inlineAdder(word, translatedWord) {
 	return frontInline + translatedWord + endInline;
 }
 
-function rebuildTranslatedWord(word, translatedWord, twoToOnePlural) {
+export function punctuationAdder(word, translatedWord) {
 	if ('-.,:;"\'?!)}]°<'.includes(word[word.length - 1])) {
-		if (word.slice(0, -1).endsWith('s')) {
-			translatedWord = translatedWord + 's';
-		}
 		translatedWord = translatedWord + word[word.length - 1];
 	}
 	if ('-.,"\'{[(#>'.includes(word[0])) {
 		translatedWord = word[0] + translatedWord;
 	}
+	return translatedWord;
+}
+
+export function pluralDetector(word, translatedWord, twoToOnePlural) {
 	if (word.endsWith('s') || twoToOnePlural === 's') {
 		translatedWord = translatedWord + 's';
-	}
-	if (word.endsWith('zed') || twoToOnePlural === 'zed') {
+	} else if (word.endsWith('zed') || twoToOnePlural === 'zed') {
 		translatedWord = translatedWord + 'd';
-	}
-	if (word.endsWith('lled')) {
+	} else if (word.endsWith('lled')) {
 		translatedWord = translatedWord + 'ed';
 	} else if (word.endsWith('llment')) {
 		translatedWord = translatedWord + 'ment';
@@ -110,8 +109,11 @@ export function translate(word, wordToTest) {
 	// make sure the translated word has the same capitalization as the original
 	translatedWord = matchCase(inlineRemover(word), translatedWord);
 
-	// add any punctuation before/after & plurals back in
-	translatedWord = rebuildTranslatedWord(word, translatedWord);
+	// add any plurals back in
+	translatedWord = pluralDetector(wordToTest, translatedWord);
+
+	// add back any punctuation at the start / end
+	translatedWord = punctuationAdder(word, translatedWord);
 
 	// add back in any inline tags before returning the word
 	return inlineAdder(word, translatedWord);

@@ -1,4 +1,4 @@
-import { inlineAdder, matchCase } from '../extension/main';
+import { inlineAdder, matchCase, punctuationAdder } from '../extension/main';
 import { test, expect } from '@jest/globals';
 
 describe('Function inlineAdder: Adding in inline HTML elements from original text to translated words', () => {
@@ -128,5 +128,45 @@ describe('Function matchCase: making the translated word the same case as the or
 		expect(matchCase('FLASHLiGHT', 'torch')).toBe('TORCH');
 		expect(matchCase('TAkEOUT', 'takeaway')).toBe('TAKEAWAY');
 		expect(matchCase('HONOr', 'honour')).toBe('HONOUR');
+	});
+});
+
+describe('Function punctuationAdder: adding back punctuation, plurals, and correct endings', () => {
+	test('it adds in single punctuation at the start of a word', () => {
+		expect(punctuationAdder('"behavior', 'behaviour')).toBe('"behaviour');
+		expect(punctuationAdder('*Favorite', 'Favourite')).toBe('*Favourite');
+		expect(punctuationAdder('#COLOR', 'COLOUR')).toBe('#COLOUR');
+	});
+
+	test('it adds in multiple punctuation marks at the start of a word', () => {
+		expect(punctuationAdder('"%armor', 'armour')).toBe('"%armour');
+		expect(punctuationAdder("'(Subway", 'Underground')).toBe("'(Underground");
+		expect(punctuationAdder('@#trunk', 'bonnet')).toBe('@#bonnet');
+	});
+
+	test('it adds in single punctuation at the end of a word', () => {
+		expect(punctuationAdder('wooly.', 'woolly')).toBe('woolly.');
+		expect(punctuationAdder('jeweler;', 'jeweller')).toBe('jeweller;');
+		expect(punctuationAdder('spelled&', 'spelt')).toBe('spelt&');
+		expect(punctuationAdder('programed?', 'programmed')).toBe('programmed?');
+	});
+
+	test('it adds in multiple punctuation marks at the end of a word', () => {
+		expect(punctuationAdder("wooly';", 'woolly')).toBe("woolly';");
+		expect(punctuationAdder('jeweler!"', 'jeweller')).toBe('jeweller!"');
+		expect(punctuationAdder('spelled)-', 'spelt')).toBe('spelt)-');
+		expect(punctuationAdder('programed?!', 'programmed')).toBe('programmed?!');
+	});
+
+	test('it adds in single punctuation at the start and end of a word', () => {
+		expect(punctuationAdder('"behavior"', 'behaviour')).toBe('"behaviour"');
+		expect(punctuationAdder('(Favorite)', 'Favourite')).toBe('(Favourite)');
+		expect(punctuationAdder('^COLOR.', 'COLOUR')).toBe('^COLOUR.');
+	});
+
+	test('it adds in multiple punctuation at the start and end of a word', () => {
+		expect(punctuationAdder('("behavior")', 'behaviour')).toBe('("behaviour")');
+		expect(punctuationAdder("#&Favorite-'", 'Favourite')).toBe("#&Favourite-'");
+		expect(punctuationAdder('\u2014<COLOR>!', 'COLOUR')).toBe('\u2014<COLOR>!');
 	});
 });
