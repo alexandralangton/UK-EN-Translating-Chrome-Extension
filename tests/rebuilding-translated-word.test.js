@@ -1,4 +1,9 @@
-import { inlineAdder, matchCase, punctuationAdder } from '../extension/main';
+import {
+	inlineAdder,
+	matchCase,
+	punctuationAdder,
+	pluralAndCaseDetector,
+} from '../extension/main';
 import { test, expect } from '@jest/globals';
 
 describe('Function inlineAdder: Adding in inline HTML elements from original text to translated words', () => {
@@ -174,41 +179,41 @@ describe('Function punctuationAdder: adding back punctuation', () => {
 });
 
 // also need to test for twoToOnePlural
-describe('Function pluralDetector: adding back plurals and correct endings', () => {
+describe('Function pluralAndCaseDetector: adding back plurals and correct endings', () => {
 	test('it makes a translated word plural if the original word is plural', () => {
-		expect(punctuationAdder('behaviors', 'behaviour')).toBe('behaviours');
-		expect(punctuationAdder('washrooms', 'lavatory')).toBe('lavatories');
-		expect(punctuationAdder('apartments', 'flat')).toBe('flats');
-		expect(punctuationAdder('flavors', 'flavour')).toBe('flavours');
-		expect(punctuationAdder('sabers', 'sabre')).toBe('sabres');
+		expect(pluralAndCaseDetector('behaviors', 'behaviour')).toBe('behaviours');
+		expect(pluralAndCaseDetector('washrooms', 'lavatory')).toBe('lavatories');
+		expect(pluralAndCaseDetector('apartments', 'flat')).toBe('flats');
+		expect(pluralAndCaseDetector('flavors', 'flavour')).toBe('flavours');
+		expect(pluralAndCaseDetector('sabers', 'sabre')).toBe('sabres');
 	});
 
 	test('it does not make a translated word plural if the original word is not plural', () => {
-		expect(punctuationAdder('zipper', 'zip')).toBe('zip');
-		expect(punctuationAdder('clothespin', 'peg')).toBe('peg');
-		expect(punctuationAdder('mom', 'mum')).toBe('mum');
-		expect(punctuationAdder('stroller', 'pushchair')).toBe('pushchair');
-		expect(punctuationAdder('savanna', 'savannah')).toBe('savannah');
+		expect(pluralAndCaseDetector('zipper', 'zip')).toBe('zip');
+		expect(pluralAndCaseDetector('clothespin', 'peg')).toBe('peg');
+		expect(pluralAndCaseDetector('mom', 'mum')).toBe('mum');
+		expect(pluralAndCaseDetector('stroller', 'pushchair')).toBe('pushchair');
+		expect(pluralAndCaseDetector('savanna', 'savannah')).toBe('savannah');
 	});
 
 	test('it identifies and matches root translations ending in "ized"', () => {
-		expect(punctuationAdder('localized', 'localise')).toBe('localised');
-		expect(punctuationAdder('apologized', 'apologise')).toBe('apologised');
-		expect(punctuationAdder('hypnotized', 'hypnotise')).toBe('hypnotised');
-		expect(punctuationAdder('realized', 'realise')).toBe('realised');
+		expect(pluralAndCaseDetector('localized', 'localise')).toBe('localised');
+		expect(pluralAndCaseDetector('apologized', 'apologise')).toBe('apologised');
+		expect(pluralAndCaseDetector('hypnotized', 'hypnotise')).toBe('hypnotised');
+		expect(pluralAndCaseDetector('realized', 'realise')).toBe('realised');
 	});
 
 	test('it identifies and matches root translations ending in "lled"', () => {
-		expect(punctuationAdder('shoveled', 'shovel')).toBe('shovelled');
-		expect(punctuationAdder('totaled', 'total')).toBe('totalled');
-		expect(punctuationAdder('rivaled', 'rival')).toBe('rivalled');
-		expect(punctuationAdder('unraveled', 'unravel')).toBe('unravelled');
+		expect(pluralAndCaseDetector('shoveled', 'shovel')).toBe('shovelled');
+		expect(pluralAndCaseDetector('totaled', 'total')).toBe('totalled');
+		expect(pluralAndCaseDetector('rivaled', 'rival')).toBe('rivalled');
+		expect(pluralAndCaseDetector('unraveled', 'unravel')).toBe('unravelled');
 	});
 
 	test('it identifies and matches root translations ending in "llment"', () => {
-		expect(punctuationAdder('fulfillment', 'fulfil')).toBe('fulfilment');
-		expect(punctuationAdder('installment', 'install')).toBe('instalment');
-		expect(punctuationAdder('enrollment', 'enrol')).toBe('enrolment');
-		expect(punctuationAdder('entrallment', 'enthral')).toBe('enthralment');
+		expect(pluralAndCaseDetector('fulfillment', 'fulfil')).toBe('fulfilment');
+		expect(pluralAndCaseDetector('installment', 'install')).toBe('instalment');
+		expect(pluralAndCaseDetector('enrollment', 'enrol')).toBe('enrolment');
+		expect(pluralAndCaseDetector('entrallment', 'enthral')).toBe('enthralment');
 	});
 });

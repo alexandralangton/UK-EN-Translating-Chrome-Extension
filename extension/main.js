@@ -91,7 +91,7 @@ export function punctuationAdder(word, translatedWord) {
 	return punctuatedWord;
 }
 
-export function pluralDetector(word, translatedWord, twoToOnePlural) {
+export function pluralAndCaseDetector(word, translatedWord, twoToOnePlural) {
 	if (word.endsWith('s') || twoToOnePlural === 's') {
 		translatedWord = translatedWord + 's';
 	} else if (word.endsWith('zed') || twoToOnePlural === 'zed') {
@@ -113,7 +113,7 @@ export function translate(word, wordToTest) {
 	translatedWord = matchCase(inlineRemover(word), translatedWord);
 
 	// add any plurals back in
-	translatedWord = pluralDetector(wordToTest, translatedWord);
+	translatedWord = pluralAndCaseDetector(wordToTest, translatedWord);
 
 	// add back any punctuation at the start / end
 	translatedWord = punctuationAdder(word, translatedWord);
